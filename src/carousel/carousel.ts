@@ -90,6 +90,11 @@ export class NgbCarousel implements AfterContentChecked,
   @Input() activeId: string;
 
   /**
+   * Whether carousel can be paused
+   */
+  @Input() pause: boolean;
+      
+  /**
    * A carousel slide event fired when the slide transition is completed.
    * See NgbSlideEvent for payload details
    */
@@ -99,6 +104,7 @@ export class NgbCarousel implements AfterContentChecked,
     this.interval = config.interval;
     this.wrap = config.wrap;
     this.keyboard = config.keyboard;
+    this.pause = config.pause;
   }
 
   ngAfterContentChecked() {
@@ -143,12 +149,18 @@ export class NgbCarousel implements AfterContentChecked,
   /**
    * Stops the carousel from cycling through items.
    */
-  pause() { this._stopTimer(); }
+  pause() { 
+    if (this.pause)
+      this._stopTimer(); 
+  }
 
   /**
    * Restarts cycling through the carousel slides from left to right.
    */
-  cycle() { this._startTimer(); }
+  cycle() { 
+    if (this.pause)
+      this._startTimer();
+  }
 
   cycleToNext() { this.cycleToSelected(this._getNextSlide(this.activeId), NgbSlideEventDirection.LEFT); }
 
